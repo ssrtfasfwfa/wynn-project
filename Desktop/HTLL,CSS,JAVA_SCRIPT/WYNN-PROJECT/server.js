@@ -49,7 +49,7 @@ const REDIRECT_URI = process.env.REDIRECT_URI;
 const GUILD_ID = process.env.GUILD_ID;
 const INVITE_URL = process.env.INVITE_URL || 'https://discord.gg/';
 
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, 'public')));
 
 if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI || !GUILD_ID) {
   console.warn('Make sure to set CLIENT_ID, CLIENT_SECRET, REDIRECT_URI and GUILD_ID in .env');
