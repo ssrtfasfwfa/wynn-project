@@ -1,77 +1,24 @@
 const express = require('express');
-const path = require('path');
 const axios = require('axios');
 const qs = require('querystring');
 require('dotenv').config();
 
-const fs = require('fs');
 const app = express();
 app.use(express.json());
 
-// Set your Discord user ID here (only you can edit leaderboard)
 const OWNER_ID = '817647495773028373';
-
-// Helper: get leaderboard data
-function getLeaderboard() {
-  try {
-    const dataPath = path.join(process.cwd(), 'leaderboard.json');
-    return JSON.parse(fs.readFileSync(dataPath, 'utf8'));
-  } catch (e) {
-    return { pvp: [], pve: [] };
-  }
-}
-
-// Helper: save leaderboard data
-function saveLeaderboard(data) {
-  const dataPath = path.join(process.cwd(), 'leaderboard.json');
-  fs.writeFileSync(dataPath, JSON.stringify(data, null, 2), 'utf8');
-}
-
-// API: get leaderboard
-app.get('/api/leaderboard', (req, res) => {
-  res.json(getLeaderboard());
-});
-
-// API: update leaderboard (owner only)
-app.post('/api/leaderboard', (req, res) => {
-  const userId = req.headers['x-discord-id'];
-  if (userId !== OWNER_ID) {
-    return res.status(403).json({ error: 'Forbidden' });
-  }
-  const { pvp, pve } = req.body;
-  if (!Array.isArray(pvp) || !Array.isArray(pve)) {
-    return res.status(400).json({ error: 'Invalid data' });
-  }
-  saveLeaderboard({ pvp, pve });
-  res.json({ success: true });
-});
-
 const PORT = process.env.PORT || 3000;
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
 const GUILD_ID = process.env.GUILD_ID;
-const INVITE_URL = process.env.INVITE_URL || 'https://discord.gg/';
 
-// Serve static files from public directory
-const publicPath = path.join(process.cwd(), 'public');
-if (fs.existsSync(publicPath)) {
-  app.use(express.static(publicPath));
-}
-
-if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI || !GUILD_ID) {
-  console.warn('Make sure to set CLIENT_ID, CLIENT_SECRET, REDIRECT_URI and GUILD_ID in .env');
-}
-
-app.get('/', (req, res) => {
-  const statsPath = path.join(publicPath, 'stats.html');
-  if (fs.existsSync(statsPath)) {
-    res.sendFile(statsPath);
-  } else {
-    res.status(404).send('stats.html not found');
-  }
+// Simple test endpoint
+app.get('/test', (req, res) => {
+  res.json({ message: 'Server is working!', CLIENT_ID, GUILD_ID });
 });
 
+// Discord OAuth callback
 app.get('/callback', async (req, res) => {
   const code = req.query.code;
   if (!code) return res.status(400).send('No code provided');
@@ -108,5 +55,24 @@ app.get('/callback', async (req, res) => {
     return res.status(500).send('Error during OAuth process. Check server logs.');
   }
 });
+
+// Leaderboard API
+app.get('/api/leaderboard', (req, res) => {
+  res.json({ pvp: [], pve: [] });
+});
+
+app.post('/api/leaderboard', (req, res) => {
+  const userId = req.headers['x-discord-id'];
+  if (userId !== OWNER_ID) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+  res.json({ success: true });
+});
+
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
 
 module.exports = app;
