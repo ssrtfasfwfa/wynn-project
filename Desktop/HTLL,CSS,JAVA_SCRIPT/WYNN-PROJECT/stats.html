@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Server Stats - Top Players</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="page">
+        <section class="hero-card">
+            <span class="tag">Server Stats</span>
+            <h1>Top 5 Players</h1>
+            <p>Select a skill category to see the current top players. Update the player list manually each month.</p>
+            <a class="discord-btn" href="main.html">Back to dashboard</a>
+        </section>
+
+        <section class="info-card stats-card-large">
+            <div class="stats-controls">
+                <label for="skill-select">Choose skill category</label>
+                <select id="skill-select" aria-label="Choose skill category">
+                    <option value="pvp">PvP Skill</option>
+                    <option value="pve">PvE Skill</option>
+                </select>
+            </div>
+
+            <div class="stats-list" id="stats-list">
+                <!-- Top player rows injected here -->
+            </div>
+
+            <p class="note">Tip: update this list manually in <code>stats.html</code> each month with the current top players from your Discord server.</p>
+        </section>
+    </main>
+
+    <script>
+        const topPlayers = {
+            pvp: [
+                { rank: 1, name: 'MercerOne', score: 980 },
+                { rank: 2, name: 'ShadowRune', score: 945 },
+                { rank: 3, name: 'Viperix', score: 910 },
+                { rank: 4, name: 'BladeStorm', score: 890 },
+                { rank: 5, name: 'NightFury', score: 860 }
+            ],
+            pve: [
+                { rank: 1, name: 'HealerHawk', score: 975 },
+                { rank: 2, name: 'TankTitan', score: 940 },
+                { rank: 3, name: 'MageMist', score: 915 },
+                { rank: 4, name: 'RangerReign', score: 895 },
+                { rank: 5, name: 'ShadowRune', score: 870 }
+            ]
+        };
+
+        const statsList = document.getElementById('stats-list');
+        const skillSelect = document.getElementById('skill-select');
+
+        function renderStats(skill) {
+            const players = topPlayers[skill];
+            statsList.innerHTML = players.map(player => `
+                <article class="player-row">
+                    <span class="player-rank">#${player.rank}</span>
+                    <div>
+                        <h3>${player.name}</h3>
+                        <p>Score: ${player.score}</p>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        skillSelect.addEventListener('change', () => renderStats(skillSelect.value));
+        renderStats(skillSelect.value);
+    </script>
+</body>
+</html>

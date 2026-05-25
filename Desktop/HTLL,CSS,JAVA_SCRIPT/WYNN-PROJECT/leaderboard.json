@@ -1,0 +1,16 @@
+{
+  "pvp": [
+    { "rank": 1, "name": "MercerOne", "score": 980 },
+    { "rank": 2, "name": "ShadowRune", "score": 945 },
+    { "rank": 3, "name": "Viperix", "score": 910 },
+    { "rank": 4, "name": "BladeStorm", "score": 890 },
+    { "rank": 5, "name": "NightFury", "score": 860 }
+  ],
+  "pve": [
+    { "rank": 1, "name": "HealerHawk", "score": 975 },
+    { "rank": 2, "name": "TankTitan", "score": 940 },
+    { "rank": 3, "name": "MageMist", "score": 915 },
+    { "rank": 4, "name": "RangerReign", "score": 895 },
+    { "rank": 5, "name": "ShadowRune", "score": 870 }
+  ]
+}
