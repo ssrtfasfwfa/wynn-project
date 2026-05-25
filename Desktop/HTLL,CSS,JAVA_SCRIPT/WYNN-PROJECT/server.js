@@ -56,7 +56,7 @@ if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI || !GUILD_ID) {
 }
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(__dirname + '/stats.html');
 });
 
 app.get('/callback', async (req, res) => {
